@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .router-link-active{
+      color: blue;
+      font-size: 20px;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="box">
+    <input type="button" name="" value="添加一个路由" @click="push">
+    <input type="button" name="" value="替换一个路由" @click="replace">
+    <div>
+      <!-- <a v-link="{path:'./home'}"></a> -->
+      <router-link to="/home">主页</router-link>
+      <router-link to="/user">用户</router-link>
+    </div>
+    <div>
+      <router-view></router-view>
+    </div>
+  </div>
+  <script src="vue2.0.3.js"></script>
+  <script src="bower_components/vue-router/dist/vue-router.min.js"></script>
+  <script>
+    //组件
+        var Home={
+            template:'<h3>我是主页</h3>'
+        };
+        
+        var User={
+            template:`
+              <div>
+                <h3>我是用户信息</h3>
+                <ul>
+                  <li><router-link to="/user/username">某用户</router-link></li>
+                  <li><router-link to="/user/pwd">某用户的密码</router-link></li>
+                  <li><router-link to="/user/phone">某用户的号码</router-link></li>
+                </ul>
+                <div>
+                  <router-view></router-view>
+                </div>
+              </div>
+            `
+        };
+        var userDetail={
+            template:'<h3>我是哪一个用户</h3>'
+        };
+        var userPwd={
+            template:`
+              <div>
+                <h3>我是哪一个用户的密码</h3>
+                <ul>
+                  <li><router-link to="/user/pwd/one">第一次密码</router-link></li>
+                  <li><router-link to="/user/pwd/two">第二次密码</router-link></li>
+                </ul>
+                <div>
+                  <router-view></router-view>
+                </div>
+              </div>
+            `
+        };
+        var userPhone={
+            template:'<h3>我是哪一个用户的号码</h3>'
+        };
+        var pwdOne={
+            template:'<h3>我是哪一个用户的第一次密码</h3>'
+        };
+        var pwdTwo={
+            template:'<h3>我是哪一个用户的第二次密码</h3>'
+        };
+
+        //配置路由
+        const routes=[
+            {path:'/home', component:Home},
+            {
+              path:'/user', 
+              component:User,
+              children: [         //核心
+                {path:'username',component:userDetail},
+                {
+                  path:'pwd',
+                  component:userPwd,
+                  children: [
+                    {path:'one',component:pwdOne},
+                    {path:'two',component:pwdTwo}
+                  ]
+                },
+                {path:'phone',component:userPhone}
+              ]
+            },
+            {path:'*', redirect:'/home'}        //类似于404
+        ];
+
+        //生成路由实例
+        const router=new VueRouter({
+            routes
+        });
+
+
+        //最后挂到vue上
+        new Vue({
+          router,
+          methods: {
+            push () {
+              router.push({path:'home'});           //直接添加一个路由，表现切换路由，本质是往历史记录里添加一个
+              
+            },
+            replace () {
+              router.replace({path:'user'});
+            }
+          }
+        }).$mount('#box');
+  </script>
+</body>
+</html>

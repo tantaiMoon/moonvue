@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="" href="./bower_components/animate.css/animate.css">
+  <style>
+    p{
+      margin: 10px auto;
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <input type="text" name="" v-model="show">
+    <transition-group enter-active-class="animated zoomInLeft" leave-active-class="animated zoomOutRight">
+      <p v-for="(val,index) in lists" :key="index">{{val}}</p>
+    </transition-group>
+  </div>
+  <script src="./vue2.0.3.js"></script>
+  <script>
+    new Vue({
+      el: '#box',
+      data: {
+        show: '',
+        list: ['apple','orange','pear','banana']
+      },
+      methods: {
+
+      },
+      computed: {
+        lists () {
+          var arr = [];
+          this.list.forEach(function(val) {
+            if(val.indexOf(this.show) != -1){
+              arr.push(val);
+            }
+          }, this);
+          return arr;
+        }
+      }
+    });
+    
+  </script>
+</body>
+</html>
